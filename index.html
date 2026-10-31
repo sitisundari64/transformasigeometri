@@ -1,0 +1,37 @@
+
+function doPost(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName("Refleksi Siswa");
+
+  if (!sheet) {
+    sheet = ss.insertSheet("Refleksi Siswa");
+    sheet.appendRow([
+      "Waktu",
+      "Nama",
+      "Perasaan",
+      "Pesan Refleksi"
+    ]);
+  }
+
+  const data = JSON.parse(e.postData.contents);
+
+  sheet.appendRow([
+    new Date(),
+    data.name || "",
+    data.feeling || "",
+    data.message || ""
+  ]);
+
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      status: "success",
+      message: "Refleksi berhasil disimpan"
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet() {
+  return ContentService
+    .createTextOutput("GeoFun Reflection Backend Aktif")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
